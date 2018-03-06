@@ -1,0 +1,5 @@
+#ignore all hidden .ideafiles
+.idea/**
+
+#ignoure output in target
+target/**
