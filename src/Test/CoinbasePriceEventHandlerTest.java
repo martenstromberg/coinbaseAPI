@@ -25,7 +25,7 @@ public class CoinbasePriceEventHandlerTest {
 
         CoinbasePriceEventHandler cp = new CoinbasePriceEventHandler();
 
-        String filename = "src/main/Messages/BTC_2018_03_04_121102.json";
+        String filename = "BTC_2018_03_04_121102.json";
 
         String fileContent = cp.readFile(filename);
 
