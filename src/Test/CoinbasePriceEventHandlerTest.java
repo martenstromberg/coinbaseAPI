@@ -65,7 +65,7 @@ public class CoinbasePriceEventHandlerTest {
         assertThat(output).isEqualTo("BTC,USD,9200.18,2018-03-04 12:11");
 
     }
-
+/*
     @Test
     public void itShouldOnlyHandleWrongFormatOfValuesInFile2() throws Exception {
 
@@ -74,6 +74,22 @@ public class CoinbasePriceEventHandlerTest {
 
         cp.addRow("test");
 
+    }
+    */
+
+    @Test
+    public void itShouldRemoveWarningsFromFileContent() throws Exception {
+
+        CoinbasePriceEventHandler cp = new CoinbasePriceEventHandler();
+
+        String fileContent = "{\"data\":{\"base\":\"BTC\",\"currency\":\"USD\",\"amount\":\"9263.81\"},\"warnings\":[{\"id\":\"missing_version\",\"message\":\"Please supply API version (YYYY-MM-DD) as CB-VERSION header\",\"url\":\"https://developers.coinbase.com/api#versioning\"}]}";
+
+
+        String cleanedFile = cp.removeWarningsFromApiInFileContent(fileContent);
+
+        System.out.println("cleaned file content: " + cleanedFile);
+
+        assertThat(cleanedFile).isEqualTo("{\"data\":{\"base\":\"BTC\",\"currency\":\"USD\",\"amount\":\"9263.81\"}}");
     }
 
 }
