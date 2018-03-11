@@ -83,6 +83,30 @@ public class CoinbasePriceEventHandler {
         return eventRow;
     }
 
+    public String handleFromS3(String fileName, String fileContentRaw) throws IOException {
+
+
+        String dateString = getDateInRedshiftFormat(fileName);
+
+        //String fileContent = readFile(fileName);
+        String fileContent = removeWarningsFromApiInFileContent(fileContentRaw);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+
+
+        CoinbasePrice coinbasePrice = objectMapper.readValue(fileContent, CoinbasePrice.class);
+
+        Map<String, String> mappedEvent = coinbasePrice.getData();
+
+        addDateTimeToEvent(mappedEvent, dateString);
+
+        String eventRow = createRow(mappedEvent);
+        System.out.println("event row is " + eventRow);
+
+        return eventRow;
+    }
+
     protected void addDateTimeToEvent(Map<String, String> map, String dateString) {
 
         map.put("Datetime", dateString);
@@ -104,7 +128,23 @@ public class CoinbasePriceEventHandler {
         return sb.toString();
     }
 
+    protected String removeWarningsFromApiInFileContent(String fileContent){
 
+        int indexOfWarning = fileContent.indexOf("\"warnings\"");
+        if(indexOfWarning!= -1) {
+            System.out.println("Warning present");
+
+            String cleanedFileContent = fileContent.substring(0, indexOfWarning-1) + "}";
+            return  cleanedFileContent;
+        }
+
+        System.out.println("No warning present - returns unchanged fileContant");
+
+        return fileContent;
+
+    }
+
+/*
     protected void addRow(String filename2) {
     try
     {
@@ -119,6 +159,7 @@ public class CoinbasePriceEventHandler {
     }
 
     }
+    */
 
 }
 
