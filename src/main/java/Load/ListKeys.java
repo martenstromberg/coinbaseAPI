@@ -1,4 +1,4 @@
-package Transform;
+package Load;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,18 +17,8 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 public class ListKeys {
 
-    //String bucketName;
-
-    //public ListKeys(String bucketName){
-
-     //   this.bucketName = bucketName;
-    //}
-
-
-    //private static String bucketName = "crypto-unprocessed-data";
-
-    //public static void main(String[] args) throws IOException {
     public List<String> getFiles(String bucketName) throws IOException {
+
         List<String> files = new ArrayList<String>();
 
         AmazonS3 s3client = new AmazonS3Client(new ProfileCredentialsProvider());

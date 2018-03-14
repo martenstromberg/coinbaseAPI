@@ -1,14 +1,32 @@
 package Transform;
 
+import Load.GetObject;
+import Load.ListKeys;
 import dto.CoinbasePriceEventHandler;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 
 public class transformData {
+
+    /*
+    protected void addRow(String filename2) {
+    try
+    {
+        String filename= "src/main/Messages/data1.csv";
+        FileWriter fw = new FileWriter(filename,true); //the true will append the new data
+        fw.write("\n");//appends the string to the file
+        fw.close();
+    }
+    catch(IOException ioe)
+    {
+        System.err.println("IOException: " + ioe.getMessage());
+    }
+
+    }
+    */
 
 
     //public List<String> getUnprocessedFiles(String bucketName) throws IOException {
@@ -41,7 +59,7 @@ public class transformData {
 
     //handle the unprocessed files and make them into CSV file
 
-        CoinbasePriceEventHandler coinbasePriceEventHandler = new CoinbasePriceEventHandler();
+        CoinbasePriceEventHandler coinbasePriceEventHandler = new CoinbasePriceEventHandler("fixtures/filesToBeZipped/");
 
         String test = coinbasePriceEventHandler.handleFromS3("BTC_2018_03_10_102701.json", fileContents.get("BTC_2018_03_10_102701.json"));
 

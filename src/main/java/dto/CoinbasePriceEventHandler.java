@@ -14,6 +14,12 @@ import java.util.Map;
 
 public class CoinbasePriceEventHandler {
 
+    final String directory;
+
+    public CoinbasePriceEventHandler(String directory){
+        this.directory = directory;
+    }
+
     /** Method extracts date and time for data point, which is stored in the name of the file rater than the content of file
      *
      * @param filename Requires filename to be in specificed format
@@ -22,15 +28,28 @@ public class CoinbasePriceEventHandler {
 
     protected String getDateInRedshiftFormat(String filename){
 
-        final Integer year = Integer.parseInt(filename.substring(4,8));
-        final Integer month = Integer.parseInt(filename.substring(10,11));
-        final Integer day = Integer.parseInt(filename.substring(13,14));
-        final Integer hour = Integer.parseInt(filename.substring(15,17));
-        final Integer minute = Integer.parseInt(filename.substring(17,19));
-
         final Calendar cal = Calendar.getInstance();
 
-        cal.set(year, month-1, day, hour, 11);
+        if(filename.length() > 25) {
+
+            final Integer year = Integer.parseInt(filename.substring(4, 8));
+            final Integer month = Integer.parseInt(filename.substring(10, 11));
+            final Integer day = Integer.parseInt(filename.substring(13, 14));
+            final Integer hour = Integer.parseInt(filename.substring(15, 17));
+            final Integer minute = Integer.parseInt(filename.substring(17, 19));
+
+            cal.set(year, month-1, day, hour, 11);
+        } else {
+
+            final Integer year = Integer.parseInt(filename.substring(0, 4));
+            final Integer month = Integer.parseInt(filename.substring(6, 7));
+            final Integer day = Integer.parseInt(filename.substring(9, 10));
+            final Integer hour = Integer.parseInt(filename.substring(11, 13));
+            final Integer minute = Integer.parseInt(filename.substring(13, 15));
+
+            cal.set(year, month-1, day, hour, 11);
+        }
+
         final Date date = cal.getTime();
 
         final SimpleDateFormat ft =
@@ -49,7 +68,7 @@ public class CoinbasePriceEventHandler {
 
     protected String readFile(String fileName) throws IOException {
 
-        final FileReader file = new FileReader("src/main/Messages/" + fileName);
+        final FileReader file = new FileReader(directory + fileName);
         final BufferedReader reader = new BufferedReader(file);
 
         StringBuilder fileContent = new StringBuilder();
@@ -63,7 +82,7 @@ public class CoinbasePriceEventHandler {
         return fileContent.toString();
     }
 
-    protected String handle(String fileName) throws IOException {
+    public String handle(String fileName) throws IOException {
 
         String dateString = getDateInRedshiftFormat(fileName);
 
@@ -77,7 +96,14 @@ public class CoinbasePriceEventHandler {
 
         addDateTimeToEvent(mappedEvent, dateString);
 
+        //String cleanedContent = removeWarningsFromApiInFileContent(mappedEvent.get(fileName));
+
+        //mappedEvent.remove(fileName);
+
+        //mappedEvent.put(fileName, cleanedContent);
+
         String eventRow = createRow(mappedEvent);
+
         System.out.println("event row is " + eventRow);
 
         return eventRow;
@@ -144,22 +170,7 @@ public class CoinbasePriceEventHandler {
 
     }
 
-/*
-    protected void addRow(String filename2) {
-    try
-    {
-        String filename= "src/main/Messages/data1.csv";
-        FileWriter fw = new FileWriter(filename,true); //the true will append the new data
-        fw.write("\n");//appends the string to the file
-        fw.close();
-    }
-    catch(IOException ioe)
-    {
-        System.err.println("IOException: " + ioe.getMessage());
-    }
 
-    }
-    */
 
 }
 

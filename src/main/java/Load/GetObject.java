@@ -1,4 +1,4 @@
-package Transform;
+package Load;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -21,10 +21,6 @@ import java.util.Map;
 public class GetObject {
 
     Map<String, String> contents;
-    //private static String bucketName = "cryptocurrency1111";
-    //private static String key        = "2018_02_04_175336.json";
-
-    //public static void main(String[] args) throws IOException {
 
     public GetObject(){
         this.contents = new HashMap<String, String>();
@@ -49,7 +45,6 @@ public class GetObject {
             S3Object objectPortion = s3Client.getObject(rangeObjectRequest);
 
             System.out.println("Printing bytes retrieved.");
-            //displayTextInputStream(objectPortion.getObjectContent());
             addTextToFile(objectPortion.getObjectContent(), fileName);
 
         } catch (AmazonServiceException ase) {
